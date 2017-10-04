@@ -13,7 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -26,10 +33,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         bd=new baseDatos(this,"proyecto",null,3);
         listClientes=(ListView) findViewById(R.id.listView);
+        listClientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                actualizar(position);
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +85,14 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("Origen","agregar");
         startActivity(i);
         finish();
+    }
+    private void actualizar(int i){
+        Intent inten=new Intent(this,Cliente_Agregar.class);
+        inten.putExtra("Origen","actualizar");
+        ViewGroup row = (ViewGroup) listClientes.getChildAt(i);
+        TextView txt_cliente = (TextView) row.findViewById(R.id.txt_id);
+        inten.putExtra("ID",txt_cliente.getText());
+        startActivity(inten);
     }
 
     public ArrayList<Cliente> buscarContacto() {
